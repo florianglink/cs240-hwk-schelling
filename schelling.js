@@ -55,74 +55,51 @@ class schellingTable {
             }
         }
     }
-    listeners() {
-        document.querySelector("#randomize").addEventListener("click", function() {
-            startup();
-        });
-        var dim = document.querySelector("#dimension");
-        dim.addEventListener("input", function() {
-            dim.value = dim.value;
-            startup();
-        });
-        var thresh = document.querySelector("#threshold");
-        thresh.addEventListener("input", function() {
-            thresh.value = thresh.value;
-        });
-        var vacant = document.querySelector("#vacantRatio");
-        vacant.addEventListener("input", function() {
-            vacant.value = vacant.value;
-            startup();
-        });
-        var pop = document.querySelector("#popRatio");
-        pop.addEventListener("input", function() {
-            pop.value = pop.value;
-            startup();
-        });
-        var xColor = document.querySelector("#popXcolor");
-        xColor.addEventListener("input", function() {
-            popXcolor.value = popXcolor.value;
-            startup();
-        })
-    }
 }
 
+function listeners() {
+    document.querySelector("#randomize").addEventListener("click", function() {
+        schelling.instantiate();
+        schelling.makeTable();
+    });
+    var dim = document.querySelector("#dimension");
+    dim.addEventListener("input", function() {
+        schelling.dimension = dim.value;
+        schelling.instantiate();
+        schelling.makeTable();
+    });
+    var thresh = document.querySelector("#threshold");
+    thresh.addEventListener("input", function() {
+        schelling.threshold = thresh.value;
+    });
+    var vacant = document.querySelector("#vacantRatio");
+    vacant.addEventListener("input", function() {
+        schelling.vacancy = vacant.value;
+        schelling.instantiate();
+        schelling.makeTable();
+    });
+    var pop = document.querySelector("#popRatio");
+    pop.addEventListener("input", function() {
+        schelling.ratio = pop.value;
+        schelling.instantiate();
+        schelling.makeTable();
+    });
+    var xColor = document.querySelector("#popXcolor");
+    xColor.addEventListener("input", function() {
+        schelling.popXcolor = xColor.value;
+        schelling.makeTable();
+    });
+    var yColor = document.querySelector("#popYcolor");
+    yColor.addEventListener("input", function() {
+        schelling.popYcolor = yColor.value;
+        schelling.makeTable();
+    });
+}
 
-// function listeners() {
-//     document.querySelector("#randomize").addEventListener("click", function() {
-//         startup();
-//     });
-//     var dim = document.querySelector("#dimension");
-//     dim.addEventListener("input", function() {
-//         dim.value = dim.value;
-//         startup();
-//     });
-//     var thresh = document.querySelector("#threshold");
-//     thresh.addEventListener("input", function() {
-//         thresh.value = thresh.value;
-//     });
-//     var vacant = document.querySelector("#vacantRatio");
-//     vacant.addEventListener("input", function() {
-//         vacant.value = vacant.value;
-//         startup();
-//     });
-//     var pop = document.querySelector("#popRatio");
-//     pop.addEventListener("input", function() {
-//         pop.value = pop.value;
-//         startup();
-//     });
-//     var xColor = document.querySelector("#popXcolor");
-//     xColor.addEventListener("input", function() {
-//         popXcolor.value = popXcolor.value;
-//         this.table.makeTable();
-//     })
-// }
+let schelling = new schellingTable;
+schelling.instantiate();
+schelling.makeTable();
 
-//listeners();
-startup();
+listeners();
     
-function startup() {
-    let schelling = new schellingTable;
-    schelling.instantiate();
-    schelling.makeTable();
-    schelling.listeners();
-}
+
