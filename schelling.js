@@ -3,15 +3,18 @@
  * @author Florian Godfrey Link
  */
 
-class schellingTable {
-    this.dimension = document.querySelector(#dimension).value;
-    this.threshold = document.querySelector(#threshold).value;
-    this.vacancy = document.querySelector(#vacantRatio).value;
-    this.ratio = document.querySelector(#popRatio).value;
-    this.popXcolor = document.querySelector(#popXcolor).value;
-    this.popYcolor = document.querySelector(#popYcolor).value;
 
-    intstantiate() {
+
+class schellingTable {
+
+    dimension = document.querySelector("#dimension").value;
+    threshold = document.querySelector("#threshold").value;
+    vacancy = document.querySelector("#vacantRatio").value;
+    ratio = document.querySelector("#popRatio").value;
+    popXcolor = document.querySelector("#popXcolor").value;
+    popYcolor = document.querySelector("#popYcolor").value;
+
+    instantiate() {
         var table = [];
         for(var i=0; i<this.dimension; i++) {
             table[i] = [];
@@ -19,6 +22,27 @@ class schellingTable {
                 table[i][j] = -1;
             }
         }
+        this.table = table;
     }
 
 }
+
+function makeTable(t) {
+    var b = document.querySelector("#board");
+    b.firstElementChild && b.removeChild(b.firstElementChild);
+    table = document.createElement("table");
+    b.appendChild(table);
+    for(var i=0; i<t.dimension; i++) {
+        var r = document.createElement("tr");
+        table.appendChild(r);
+        for(j=0; j<t.dimension; j++) {
+            var n = document.createElement("td");
+            n.style.backgroundColor = t.popXcolor.value;
+            r.appendChild(n);
+        }
+    }
+}
+
+let schelling = new schellingTable;
+schelling.instantiate();
+makeTable(schelling);
