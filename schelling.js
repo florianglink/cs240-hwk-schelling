@@ -3,8 +3,6 @@
  * @author Florian Godfrey Link
  */
 
-
-
 class schellingTable {
 
     dimension = document.querySelector("#dimension").value;
@@ -28,17 +26,27 @@ class schellingTable {
 }
 
 function makeTable(t) {
-    var b = document.querySelector("#board");
-    b.firstElementChild && b.removeChild(b.firstElementChild);
+    var board = document.querySelector("#board");
+    board.firstElementChild && board.removeChild(board.firstElementChild);
     table = document.createElement("table");
-    b.appendChild(table);
+    board.appendChild(table);
     for(var i=0; i<t.dimension; i++) {
-        var r = document.createElement("tr");
-        table.appendChild(r);
+        var row = document.createElement("tr");
+        table.appendChild(row);
         for(j=0; j<t.dimension; j++) {
-            var n = document.createElement("td");
-            n.style.backgroundColor = t.popXcolor.value;
-            r.appendChild(n);
+            var data = document.createElement("td");
+            if(Math.random() < t.vacancy) {
+                data.style.backgroundColor = "#FFFFFF";
+            }
+            else {
+                if(Math.random() < t.ratio) {
+                    data.style.backgroundColor = t.popXcolor;
+                }
+                else {
+                    data.style.backgroundColor = t.popYcolor;
+                }
+            }
+            row.appendChild(data);
         }
     }
 }
