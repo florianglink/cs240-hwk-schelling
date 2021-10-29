@@ -100,8 +100,23 @@ let schelling = new schellingTable;
 schelling.instantiate();
 schelling.makeTable();
 listeners();
-getOpenSpaces();
-console.log(chooseOpenSpace());
+// getOpenSpaces();
+// console.log(chooseOpenSpace());
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+generation();
+
 
 
 //console.log(satisfied(5,0));
@@ -112,28 +127,28 @@ function satisfied(i,j) {
     var totalDifferent = 0;
     var neighbors= [];
 
-    if(schelling.table[i-1][j] != null) {
+    if(schelling.table[i-1][j] != undefined) {
         neighbors.push(schelling.table[i-1][j]);
     }
-    if(schelling.table[i+1][j] != null) {
+    if(schelling.table[i+1][j] != undefined) {
         neighbors.push(schelling.table[i+1][j]);
     }
-    if(schelling.table[i][j-1] != null) {
+    if(schelling.table[i][j-1] != undefined) {
         neighbors.push(schelling.table[i][j-1]);
     }
-    if(schelling.table[i][j+1] != null) {
+    if(schelling.table[i][j+1] != undefined) {
         neighbors.push(schelling.table[i][j+1]);
     }
-    if(schelling.table[i-1][j-1] != null) {
+    if(schelling.table[i-1][j-1] != undefined) {
         neighbors.push(schelling.table[i-1][j-1]);
     }
-    if(schelling.table[i+1][j+1] != null) {
+    if(schelling.table[i+1][j+1] != undefined) {
         neighbors.push(schelling.table[i+1][j+1]);
     }
-    if(schelling.table[i+1][j-1] != null) {
+    if(schelling.table[i+1][j-1] != undefined) {
         neighbors.push(schelling.table[i+1][j-1]);
     }
-    if(schelling.table[i-1][j+1] != null) {
+    if(schelling.table[i-1][j+1] != undefined) {
         neighbors.push(schelling.table[i-1][j+1]);
     }
 
@@ -173,4 +188,29 @@ function chooseOpenSpace() {
     var spaces = getOpenSpaces();
     var candidate = spaces[Math.floor(Math.random()*spaces.length)];
     return candidate;
+}
+
+async function generation() {
+    await new Promise((resolve) =>
+        setTimeout(() => {
+            resolve(); // do nothing after waiting 100 ms, just alert the calling thread
+        }, 100)
+    );
+    for(var i=0; i<schelling.dimension; i++){
+        for(var j=0; j<schelling.dimension; j++) {
+            if(schelling.table[i][j] != "x") {
+                if(!satisfied(i,j)) {
+                    var newLocation = chooseOpenSpace();
+                    if(newLocation != undefined) {
+                        var newY = newLocation[0];
+                        var newX = newLocation[1];
+                        var temp = schelling[newY][newX];
+                        schelling.table[i][j] = schelling.table[newY][newX];
+                        schelling.table[i][j] = temp;
+                    }
+                }
+            }
+        }
+    }
+    schelling.makeTable();
 }
