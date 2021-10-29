@@ -96,26 +96,21 @@ function listeners() {
     });
 }
 
-let schelling = new schellingTable;
+var schelling = new schellingTable;
 schelling.instantiate();
 schelling.makeTable();
 listeners();
 // getOpenSpaces();
 // console.log(chooseOpenSpace());
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
-generation();
+async function test() {
+await generation();
+await generation();
+await generation();
+await generation();
+await generation();
+await generation();
+}
+test();
 
 
 
@@ -127,31 +122,54 @@ function satisfied(i,j) {
     var totalDifferent = 0;
     var neighbors= [];
 
+try {
     if(schelling.table[i-1][j] != undefined) {
         neighbors.push(schelling.table[i-1][j]);
     }
+}
+catch {}
+try {
     if(schelling.table[i+1][j] != undefined) {
         neighbors.push(schelling.table[i+1][j]);
     }
+}
+catch {}
+try {
     if(schelling.table[i][j-1] != undefined) {
         neighbors.push(schelling.table[i][j-1]);
     }
+}
+catch {}
+try {
     if(schelling.table[i][j+1] != undefined) {
         neighbors.push(schelling.table[i][j+1]);
     }
+}
+catch{}
+try {
     if(schelling.table[i-1][j-1] != undefined) {
         neighbors.push(schelling.table[i-1][j-1]);
     }
+}
+catch{}
+try {
     if(schelling.table[i+1][j+1] != undefined) {
         neighbors.push(schelling.table[i+1][j+1]);
     }
+}
+catch{}
+try {
     if(schelling.table[i+1][j-1] != undefined) {
         neighbors.push(schelling.table[i+1][j-1]);
     }
+}
+catch{}
+try {
     if(schelling.table[i-1][j+1] != undefined) {
         neighbors.push(schelling.table[i-1][j+1]);
     }
-
+}
+catch{}
     for(var k=0; k<neighbors.length; k++) {
         if(neighbors[k] != "x" && neighbors[k] == schelling.table[i][j]) {
             totalSimilar++;
@@ -200,14 +218,13 @@ async function generation() {
         for(var j=0; j<schelling.dimension; j++) {
             if(schelling.table[i][j] != "x") {
                 if(!satisfied(i,j)) {
-                    var newLocation = chooseOpenSpace();
-                    if(newLocation != undefined) {
-                        var newY = newLocation[0];
-                        var newX = newLocation[1];
-                        var temp = schelling[newY][newX];
-                        schelling.table[i][j] = schelling.table[newY][newX];
-                        schelling.table[i][j] = temp;
-                    }
+                    var newLocation = chooseOpenSpace()  
+                    console.log("in try");
+                    var newY = newLocation[0];
+                    var newX = newLocation[1];
+                    var temp = schelling.table[newY][newX];
+                    schelling.table[i][j] = schelling.table[newY][newX];
+                    schelling.table[i][j] = temp;    
                 }
             }
         }
