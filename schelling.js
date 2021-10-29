@@ -3,6 +3,9 @@
  * @author Florian Godfrey Link
  */
 
+/**
+ * Main class to hold all the relevant information needed to represent the board
+ */
 class schellingTable {
 
     dimension = document.querySelector("#dimension").value;
@@ -13,6 +16,9 @@ class schellingTable {
     popYcolor = document.querySelector("#popYcolor").value;
     table = [];
 
+//Creates the 2D array to represent the table on which the simulation is run. Puts an "x"
+//in a cell if it is a blank space, an "a" if the space is occupied by an agent from 
+//population X and a "b" if the space is occupied by an agent from population Y.
     instantiate() {
         for(var i=0; i<this.dimension; i++) {
             this.table[i] = [];
@@ -32,6 +38,9 @@ class schellingTable {
         }
     }
 
+//After the board has been created, this method iterates over it and appends each element as part of an
+//HTML table to the #board div in index.HTML with the correct color depending on if the given space
+//is occupied by an agent from pop X, pop Y, or is a blank space (colored white).
     makeTable() {
         var board = document.querySelector("#board");
         board.firstElementChild && board.removeChild(board.firstElementChild);
@@ -57,84 +66,65 @@ class schellingTable {
     }
 }
 
+//instantiates the event listeners necessary to dynamically update the board as the user types in a new value
+//for dimension, color, etc.
 function listeners() {
     document.querySelector("#randomize").addEventListener("click", function() {
         schelling.instantiate();
         schelling.makeTable();
     });
-    var dim = document.querySelector("#dimension");
+    let dim = document.querySelector("#dimension");
     dim.addEventListener("input", function() {
         schelling.dimension = dim.value;
         schelling.instantiate();
         schelling.makeTable();
     });
-    var thresh = document.querySelector("#threshold");
+    let thresh = document.querySelector("#threshold");
     thresh.addEventListener("input", function() {
         schelling.threshold = thresh.value;
     });
-    var vacant = document.querySelector("#vacantRatio");
+    let vacant = document.querySelector("#vacantRatio");
     vacant.addEventListener("input", function() {
         schelling.vacancy = vacant.value;
         schelling.instantiate();
         schelling.makeTable();
     });
-    var pop = document.querySelector("#popRatio");
+    let pop = document.querySelector("#popRatio");
     pop.addEventListener("input", function() {
         schelling.ratio = pop.value;
         schelling.instantiate();
         schelling.makeTable();
     });
-    var xColor = document.querySelector("#popXcolor");
+    let xColor = document.querySelector("#popXcolor");
     xColor.addEventListener("input", function() {
         schelling.popXcolor = xColor.value;
         schelling.makeTable();
     });
-    var yColor = document.querySelector("#popYcolor");
+    let yColor = document.querySelector("#popYcolor");
     yColor.addEventListener("input", function() {
         schelling.popYcolor = yColor.value;
         schelling.makeTable();
     });
+    let startStop = document.querySelector("#runstop");
+    startStop.addEventListener("click", function() {
+        if(startStop.innerHTML == "Stop!") {
+            startStop.value = "false";
+        }
+        else if(startStop.value == "true") {
+            runSim();
+        }
+    });
+
 }
 
-var schelling = new schellingTable;
+//startup
+let schelling = new schellingTable;
 schelling.instantiate();
 schelling.makeTable();
 listeners();
-// getOpenSpaces();
-// console.log(chooseOpenSpace());
-async function test() {
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-await generation();
-}
-test();
 
-
-
-//console.log(satisfied(5,0));
-//console.log(satisfied(1,1));
-    
+//this function iterates over the table and determines if the agent in each cell is satisfied
+//given the similarity threshold.   
 function satisfied(i,j) {
     var totalSimilar = 0;
     var totalDifferent = 0;
@@ -197,7 +187,7 @@ catch{}
         }
     }
     var localRatio = totalSimilar/(totalSimilar + totalDifferent);
-    if (localRatio >= schelling.ratio) {
+    if (localRatio >= schelling.threshold) {
         return true;
     } 
     else {
@@ -205,6 +195,9 @@ catch{}
     }
 }
 
+//finds all open spaces in the board and collects them into a single array.
+//each element in the arry is an array of length 2 that holds the indices of the board for 
+//the given blank space
 function getOpenSpaces() {
     var openSpaces = [];
     for(var i=0; i<schelling.dimension; i++) {
@@ -220,33 +213,64 @@ function getOpenSpaces() {
     return openSpaces;
 }
 
+//calls getOpenSpaces and randomly chooses an open space
 function chooseOpenSpace() {
     var spaces = getOpenSpaces();
     var candidate = spaces[Math.floor(Math.random()*spaces.length)];
     return candidate;
 }
 
+//iterates over the board and determines if each agent is satisfied. If not, the agent 
+//is moved to a random blank space
 async function generation() {
     await new Promise((resolve) =>
         setTimeout(() => {
             resolve(); // do nothing after waiting 100 ms, just alert the calling thread
         }, 100)
     );
+    let moves = 0;
     for(var i=0; i<schelling.dimension; i++){
         for(var j=0; j<schelling.dimension; j++) {
             if(schelling.table[i][j] != "x") {
                 if(!satisfied(i,j)) {
                     var curr = schelling.table[i][j];
-                    var newLocation = chooseOpenSpace()  
-                    console.log("in try");
-                    var newY = newLocation[0];
-                    var newX = newLocation[1];
-                    var newLoc = schelling.table[newY][newX];
-                    schelling.table[i][j] = schelling.table[newY][newX];
-                    schelling.table[newY][newX] = curr;    
+                    var newLocation = chooseOpenSpace();
+                    try { 
+                        var newY = newLocation[0];
+                        var newX = newLocation[1];
+                        var newLoc = schelling.table[newY][newX];
+                        schelling.table[i][j] = schelling.table[newY][newX];
+                        schelling.table[newY][newX] = curr;
+                        moves++;
+                    }
+                    catch {
+                    }
                 }
             }
         }
     }
     schelling.makeTable();
+    return moves;
+}
+
+let generations = 0;
+
+//continues to run generations until the board converges or the user presses the 
+//"stop" button
+async function runSim() {
+    let button = document.querySelector("#runstop")
+    button.innerHTML = "Stop!";
+    let total = document.querySelector("p");
+    let moves = 0;
+    do {
+        moves = 0;
+        moves += await generation();
+        generations++;
+        total.innerHTML = "Generations: " + generations;
+        if(button.value == "false") {
+            break;
+        }
+    } while (moves > 0 && button.value == "true");
+    button.innerHTML = "Run!";
+    button.value = "true";
 }
