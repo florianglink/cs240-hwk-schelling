@@ -100,9 +100,12 @@ let schelling = new schellingTable;
 schelling.instantiate();
 schelling.makeTable();
 listeners();
+getOpenSpaces();
+console.log(chooseOpenSpace());
 
-console.log(satisfied(5,0));
-console.log(satisfied(1,1));
+
+//console.log(satisfied(5,0));
+//console.log(satisfied(1,1));
     
 function satisfied(i,j) {
     var totalSimilar = 0;
@@ -163,4 +166,11 @@ function getOpenSpaces() {
             }
         }
     }
+    return openSpaces;
+}
+
+function chooseOpenSpace() {
+    var spaces = getOpenSpaces();
+    var candidate = spaces[Math.floor(Math.random()*spaces.length)];
+    return candidate;
 }
