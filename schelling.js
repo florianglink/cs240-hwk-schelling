@@ -243,7 +243,7 @@ async function generation() {
                     var newX = newLocation[1];
                     var newLoc = schelling.table[newY][newX];
                     schelling.table[i][j] = schelling.table[newY][newX];
-                    schelling.table[i][j] = newLoc;    
+                    schelling.table[newY][newX] = curr;    
                 }
             }
         }
