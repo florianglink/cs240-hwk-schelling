@@ -236,13 +236,14 @@ async function generation() {
         for(var j=0; j<schelling.dimension; j++) {
             if(schelling.table[i][j] != "x") {
                 if(!satisfied(i,j)) {
+                    var curr = schelling.table[i][j];
                     var newLocation = chooseOpenSpace()  
                     console.log("in try");
                     var newY = newLocation[0];
                     var newX = newLocation[1];
-                    var temp = schelling.table[newY][newX];
+                    var newLoc = schelling.table[newY][newX];
                     schelling.table[i][j] = schelling.table[newY][newX];
-                    schelling.table[i][j] = temp;    
+                    schelling.table[i][j] = newLoc;    
                 }
             }
         }
