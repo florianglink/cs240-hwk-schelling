@@ -99,7 +99,68 @@ function listeners() {
 let schelling = new schellingTable;
 schelling.instantiate();
 schelling.makeTable();
-
 listeners();
-    
 
+console.log(satisfied(5,0));
+console.log(satisfied(1,1));
+    
+function satisfied(i,j) {
+    var totalSimilar = 0;
+    var totalDifferent = 0;
+    var neighbors= [];
+
+    if(schelling.table[i-1][j] != null) {
+        neighbors.push(schelling.table[i-1][j]);
+    }
+    if(schelling.table[i+1][j] != null) {
+        neighbors.push(schelling.table[i+1][j]);
+    }
+    if(schelling.table[i][j-1] != null) {
+        neighbors.push(schelling.table[i][j-1]);
+    }
+    if(schelling.table[i][j+1] != null) {
+        neighbors.push(schelling.table[i][j+1]);
+    }
+    if(schelling.table[i-1][j-1] != null) {
+        neighbors.push(schelling.table[i-1][j-1]);
+    }
+    if(schelling.table[i+1][j+1] != null) {
+        neighbors.push(schelling.table[i+1][j+1]);
+    }
+    if(schelling.table[i+1][j-1] != null) {
+        neighbors.push(schelling.table[i+1][j-1]);
+    }
+    if(schelling.table[i-1][j+1] != null) {
+        neighbors.push(schelling.table[i-1][j+1]);
+    }
+
+    for(var k=0; k<neighbors.length; k++) {
+        if(neighbors[k] != "x" && neighbors[k] == schelling.table[i][j]) {
+            totalSimilar++;
+        }
+        else if(neighbors[k] != "x" && neighbors[k] != schelling.table[i][j]){
+            totalDifferent++;
+        }
+    }
+    var localRatio = totalSimilar/(totalSimilar + totalDifferent);
+    if (localRatio >= schelling.ratio) {
+        return true;
+    } 
+    else {
+        return false;
+    }
+}
+
+function getOpenSpaces() {
+    var openSpaces = [];
+    for(var i=0; i<schelling.dimension; i++) {
+        for(var j=0; j<schelling.dimension; j++) {
+            if(schelling.table[i][j] == "x") {
+                var entry = [];
+                entry.push(i);
+                entry.push(j);
+                openSpaces.push(entry);
+            }
+        }
+    }
+}
